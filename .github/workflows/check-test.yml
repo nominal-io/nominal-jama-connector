@@ -1,0 +1,38 @@
+# Checks formatting, lint and types, then runs the unit tests, on each supported Python version.
+name: Check and test
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install uv
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          enable-cache: false
+          python-version: ${{ matrix.python-version }}
+      - name: Install just
+        uses: extractions/setup-just@53165ef7e734c5c07cb06b3c8e7b647c5aa16db3 # v4.0.0
+      - name: Check the lockfile is current
+        run: uv lock --check
+      - name: Install dependencies
+        run: just install
+      - name: Check format, lint and types
+        run: just check
+      - name: Run unit tests
+        run: just test
+      - name: Build the package
+        run: just package

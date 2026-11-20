@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Written by the tool's commands when run in the checkout
+jama-checks.toml
+/requirements.json
+/checks.json
+/checks-plan.md
+/test-cases.json
+/test-checks.json
+/test-checks-plan.md

@@ -1,0 +1,28 @@
+{
+  "format": "nominal-checks-from-jama/requirements",
+  "version": 1,
+  "items": "requirements",
+  "source": {
+    "base_url": "https://example.jamacloud.com",
+    "project": "12",
+    "project_name": "Widget Assembly"
+  },
+  "requirements": [
+    {
+      "item_id": "101",
+      "document_key": "WA-REQ-101",
+      "name": "Brake temperature",
+      "text": "`brake_temp` stays below 450°C during a \"hot stop\"; no fade.",
+      "html": "<p>`brake_temp` stays below 450&deg;C during a \"hot stop\"; no fade.</p>",
+      "url": "https://example.jamacloud.com/perspective.req#/items/101?projectId=12"
+    },
+    {
+      "item_id": "102",
+      "document_key": "WA-REQ-102",
+      "name": "Pedal force",
+      "text": "Under 500 N at full braking.",
+      "html": "<p>Under 500 N at full braking.</p>",
+      "url": "https://example.jamacloud.com/perspective.req#/items/102?projectId=12"
+    }
+  ]
+}

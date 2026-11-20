@@ -53,5 +53,6 @@ file between steps. Keep them separate: a step reads only the previous step's da
 - Jama's ids are strings in every model, whatever type the wire sends.
 - Errors are classified by HTTP status, never by message text, and never include a response body.
 - A listing that stops at a cap says so (`truncated`); it never returns a partial set as complete.
-- The tool changes only checks and variables it created and nobody has edited since. Anything else
-  in the checklist is sent back unchanged.
+- `sync` rewrites only what Jama owns: a check's title, and its description up to the line that
+  links to Jama. It keeps each check's condition and notes, removes a check only when asked, and
+  sends everything else in the checklist back unchanged.

@@ -51,7 +51,7 @@ Run `sync` again whenever requirements change in Jama Connect.
 Jama Connect is the source of truth for each check's title and description:
 
 - A new requirement gets a check.
-- A check whose title or description differs from its requirement is rewritten from Jama Connect, keeping its condition. The sync prints each difference:
+- A check whose title or description differs from its requirement is rewritten from Jama Connect, keeping its condition and its notes. The sync prints each difference:
 
   ```text
     updated from Jama: WA-REQ-102 Pedal force
@@ -68,6 +68,7 @@ Jama Connect is the source of truth for each check's title and description:
 - Checks and variables that don't come from Jama Connect are left alone.
 
 Differences only in spacing or line breaks don't count.
+Text after the line in a check's description that links to Jama Connect is notes, yours or your agent's: the sync doesn't compare it, and keeps it when it rewrites the check.
 
 To choose what a sync rewrites, use `--update`:
 

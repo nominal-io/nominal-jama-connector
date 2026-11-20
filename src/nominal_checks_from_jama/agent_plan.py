@@ -156,6 +156,24 @@ _COMPUTED = (
     "condition and give the reason."
 )
 
+# Said in each kind's drafting step: a limit that holds only in some state needs that state in its condition,
+# from channels already in play where possible.
+_STATE = (
+    "Where a limit applies only in a state, such as a phase of operation, add a condition on that state. If "
+    "channels that measure the state already exist, in the data or proposed for another requirement, define the "
+    "state from them, computing a rate with `derivative` in a checklist variable when only the quantity itself is "
+    "a channel. Otherwise use a channel for the mode or phase: the data's, or a proposed one. Note in the check "
+    "how you defined the state."
+)
+
+# Said where the steps protect the checks' text: what follows the link line is the agent's and the user's.
+_NOTES = (
+    f"Everything in a description after its `{JAMA_LINK.strip()}` line is notes, which the tool's `sync` command "
+    "keeps. Put your notes there, after a line `Notes:`, for anything a reviewer of the check needs: how you "
+    "defined a state, what the condition doesn't cover, and what it assumes. Keep notes already there, adding to "
+    "them rather than repeating them."
+)
+
 _PROPOSED = (
     "List every channel name you proposed, however many there are, each with its check and data scope. Don't "
     "send the user to the draft for them. Until a run has those channels, the checklist won't execute on it. "
@@ -176,11 +194,12 @@ def _requirement_steps(where: str, data_scope: str) -> list[str]:
         "fails where its condition holds. Add the condition to the requirement's check. If the requirement has "
         "no check, add one with exactly the title and description given below, including that last line, and "
         "the condition: later runs find the check by that line. If the requirement states nothing measurable, "
-        f"add no condition, and if it has no check, don't add one. {_EXACT} {_COMPUTED}",
+        f"add no condition, and if it has no check, don't add one. {_EXACT} {_COMPUTED} {_STATE}",
         _channels(5, where, data_scope, "requirement"),
         _match(6),
-        "7. Leave every check's title and description as they are, and don't delete checks, including checks "
-        f"that link to a requirement not listed below. {_SYNC_COMPARES}",
+        f"7. Leave every check's title, and its description up to and including its `{JAMA_LINK.strip()}` line, as "
+        "they are, and don't delete checks, including checks that link to a requirement not listed below. "
+        f"{_SYNC_COMPARES} {_NOTES}",
         "8. Don't change a condition someone else wrote, except its channel as step 6 says.",
         "9. When you're done, link the draft, and report: the checks you added, the conditions you drafted with "
         "the channel each reads and why you chose it (marked, matched from the requirement's wording, or "
@@ -204,11 +223,12 @@ def _test_case_steps(where: str, data_scope: str) -> list[str]:
         "5. For each check, draft a condition for the criterion it covers; a check fails where its condition "
         "holds. Add a new check only together with its condition. If a criterion isn't measurable, add no "
         f"condition for it, and no check for it unless the test case's existing check covers it. {_EXACT} "
-        f"{_COMPUTED}",
+        f"{_COMPUTED} {_STATE}",
         _channels(6, where, data_scope, "test case"),
         _match(7),
-        "8. Leave every check's description as it is, and its title too except as step 4 says, and don't delete "
-        f"checks, including checks that link to a test case not listed below. {_SYNC_COMPARES}",
+        f"8. Leave every check's description up to and including its `{link}` line as it is, and its title too "
+        "except as step 4 says, and don't delete checks, including checks that link to a test case not listed "
+        f"below. {_SYNC_COMPARES} {_NOTES}",
         "9. Don't change a condition someone else wrote, except its channel as step 7 says.",
         "10. When you're done, link the draft, and report: the checks you added, with how many you made for "
         "each test case and why, the conditions you drafted with the channel each reads and why you chose it "

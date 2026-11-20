@@ -40,7 +40,7 @@ from nominal_checks_from_jama._nominal import (
     Rewrite,
     SdkChecklists,
 )
-from nominal_checks_from_jama.checks import Checks, CheckSpec, linked_item
+from nominal_checks_from_jama.checks import Checks, CheckSpec, linked_item, split_notes
 from nominal_checks_from_jama.config import NominalSettings
 from nominal_checks_from_jama.kinds import ItemKind
 from nominal_checks_from_jama.requirements import Source
@@ -217,11 +217,13 @@ def _same(a: str, b: str) -> bool:
 
 
 def _differences(check: ExistingCheck, spec: CheckSpec) -> tuple[Difference, ...]:
+    """Where the check differs from Jama. Its description counts only up to its link line: notes after it don't."""
     found: list[Difference] = []
     if not _same(check.title, spec.title):
         found.append(Difference(Field.TITLE, check.title, spec.title))
-    if not _same(check.description, spec.description):
-        found.append(Difference(Field.DESCRIPTION, check.description, spec.description))
+    text, _notes = split_notes(check.description, spec.url)
+    if not _same(text, spec.description):
+        found.append(Difference(Field.DESCRIPTION, text, spec.description))
     return tuple(found)
 
 
@@ -303,7 +305,11 @@ def _compare(check: ExistingCheck, spec: CheckSpec, rewrite: frozenset[Field]) -
     if not check.copyable:
         return Keep(check.rid), Result(spec.item_id, check.title, Outcome.CANT_UPDATE, differences)
     title = spec.title if Field.TITLE in rewrite else check.title
-    description = spec.description if Field.DESCRIPTION in rewrite else check.description
+    description = check.description
+    if Field.DESCRIPTION in rewrite:
+        # Jama's text up to the link line, then the notes the check already had
+        _text, notes = split_notes(check.description, spec.url)
+        description = f"{spec.description}\n\n{notes}" if notes else spec.description
     return Rewrite(check, title, description), Result(spec.item_id, title, Outcome.UPDATED, differences)
 
 

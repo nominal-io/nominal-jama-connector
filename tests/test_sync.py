@@ -12,7 +12,7 @@ from click.testing import CliRunner
 from nominal_checks_from_jama import cli
 from nominal_checks_from_jama._jama import JamaClient
 from nominal_checks_from_jama._nominal import ChecklistConflict, ExistingCheck
-from nominal_checks_from_jama.checks import JAMA_LINK, Checks
+from nominal_checks_from_jama.checks import JAMA_LINK, Checks, split_notes
 from nominal_checks_from_jama.cli import main
 from nominal_checks_from_jama.config import Config, JamaSettings, NominalSettings
 from nominal_checks_from_jama.kinds import ItemKind
@@ -90,6 +90,30 @@ def test_a_change_in_jama_rewrites_the_check_and_keeps_its_condition(
     check = nominal.only().checks[0]
     assert check.description.startswith("Stays below 400°C.")
     assert check.has_condition
+
+
+def test_notes_after_the_link_line_are_not_a_difference_and_survive_a_rewrite(
+    config: Config, jama: JamaClient, project: FakeJama
+) -> None:
+    nominal = FakeChecklists()
+    run(config, jama, nominal)
+    notes = "Notes:\nThe state is taken as vertical speed within 0.5 m/s."
+    original = nominal.only().checks[0].description
+    nominal.edit("WA-REQ-101", description=f"{original}\n\n{notes}")
+    assert outcomes(run(config, jama, nominal))["WA-REQ-101"] is Outcome.UNCHANGED
+    project.set_field(101, "description", "<p>Stays below 400&deg;C.</p>")
+    result = run(config, jama, nominal)
+    assert outcomes(result)["WA-REQ-101"] is Outcome.UPDATED
+    (difference,) = result.plan.results[0].differences
+    assert notes not in difference.nominal  # the difference shows Jama's text only
+    assert nominal.only().checks[0].description == f"Stays below 400°C.\n\n{JAMA_LINK}{url(101)}\n\n{notes}"
+
+
+def test_split_notes_splits_at_the_items_own_link_line() -> None:
+    link = f"{JAMA_LINK}{url(101)}"
+    assert split_notes(f"Text.\n\n{link}\n\nNotes:\nA.", url(101)) == (f"Text.\n\n{link}", "Notes:\nA.")
+    assert split_notes(f"Text.\n\n{link}", url(101)) == (f"Text.\n\n{link}", "")
+    assert split_notes("Text without a link.", url(101)) == ("Text without a link.", "")
 
 
 def test_an_edit_in_nominal_is_reported_and_rewritten_from_jama(

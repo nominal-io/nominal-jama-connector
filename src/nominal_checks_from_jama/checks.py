@@ -151,6 +151,28 @@ def linked_item(description: str, source: Source) -> str | None:
     return None
 
 
+def split_notes(description: str, url: str) -> tuple[str, str]:
+    """A check's description split at its line linking to ``url``: Jama's text, and the notes after it.
+
+    Jama is the source of truth for the text up to and including the link line. What follows it is
+    notes, from the user or an agent, which a sync keeps.
+
+    Args:
+        description (str): The check's description.
+        url (str): The URL of the check's item in Jama.
+
+    Returns:
+        tuple[str, str]: The description up to and including the link line, and the notes after it,
+        without surrounding blank lines. The whole description and no notes when it has no such line.
+    """
+    link = JAMA_LINK + url
+    lines = description.splitlines()
+    for index, line in enumerate(lines):
+        if line.strip() == link:
+            return "\n".join(lines[: index + 1]), "\n".join(lines[index + 1 :]).strip()
+    return description, ""
+
+
 def build_checks(
     requirements: Requirements,
     find_channels: ChannelFinder | None = None,

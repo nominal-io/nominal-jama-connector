@@ -110,6 +110,11 @@ def test_proposed_channels_are_listed_and_later_matched_to_the_data() -> None:
     # a delay between two signals is a state with time persistence, not a channel someone has to compute
     assert "set the check's time persistence (`timePersistence`) to T" in markdown
     assert "This works only while X stays set until Y happens" in markdown
+    # a limit that holds only in a state is scoped by channels already in play, else a mode channel
+    assert "computing a rate with `derivative` in a checklist variable" in markdown
+    # the agent's notes go after the link line, which sync keeps
+    assert "Put your notes there, after a line `Notes:`" in markdown
+    assert "up to and including its `Jama:` line" in markdown
     test_case = Requirement("7", "WA-TC-7", "Hot stop test", "Pass criteria: below 450 C.", "", f"{BASE}/item/7")
     test_checks = build_checks(Requirements(SOURCE, (test_case,), ItemKind.TEST_CASES))
     assert "except its channel as step 7 says" in write_agent_plan(test_checks).markdown

@@ -49,7 +49,7 @@ To use Nominal's Analyst instead, open Analyst and paste the contents of `checks
 The agent:
 
 1. Finds the checklist for the Jama Connect project by its properties, `jama_host`, `jama_project` and `jama_items`, or creates one and sets them.
-2. Drafts a condition, in a draft of the checklist, where a requirement states a limit or behavior it can measure on a channel of the run or asset. It adds the condition to the requirement's check, or adds the check with it.
+2. Drafts a condition, in a draft of the checklist, where a requirement states a limit or behavior it can measure on a channel of the run or asset. It adds the condition to the requirement's check, or adds the check with it. In the check's description, after the line that links to Jama Connect, it notes what the condition assumes, such as how it defined a phase of operation.
 3. Where the run or asset has data, moves each existing condition on a channel it lacks, such as a proposed name, to the channel that measures the same thing.
 4. Links the draft, and lists the channel each condition reads and why it chose it, the channel names it proposed, and each requirement it left without a condition or a check, with the reason.
 
@@ -59,7 +59,7 @@ Where the agent found a requirement ambiguous, fix its wording in Jama Connect, 
 
 1. Open the checklist and click **EDIT CHECKLIST**.
 2. Under **Edit existing draft**, select the agent's draft, and click **EDIT DRAFT**.
-3. Check each condition against its requirement: the channel, the threshold and its units, and that the condition describes the failure. For "stays below 450 °C", the condition is `brake_temp` ≥ 450.
+3. Check each condition against its requirement and the agent's notes: the channel, the threshold and its units, and that the condition describes the failure. For "stays below 450 °C", the condition is `brake_temp` ≥ 450.
 4. Fix or remove any condition that's wrong.
 5. Click **PUBLISH**, choose **Publish as latest version…**, enter a **Message**, and click **PUBLISH**.
 
@@ -86,11 +86,12 @@ Checks without a condition are left out of the result.
 ## Keep the checklist in line with Jama
 
 When requirements change in Jama Connect, run `sync`.
-It adds checks for new requirements, rewrites the title and description of each check whose requirement changed, keeping its condition, and lists the checks whose requirement is gone.
+It adds checks for new requirements, rewrites the title and description of each check whose requirement changed, keeping its condition and notes, and lists the checks whose requirement is gone.
 [Sync again after Jama changes](sync.md#sync-again-after-jama-changes) covers its options.
 Then write the plan again and give it to your agent, which drafts conditions for the new checks.
 
-Jama Connect is the source of truth for each check's title and description, and your agent leaves them alone.
+Jama Connect is the source of truth for each check's title, and its description up to the line that links to Jama Connect. Your agent leaves those alone.
+Add your own notes after that line: `sync` keeps them.
 Where `sync` says it can't copy a check's condition, it can't rewrite that check's text either: ask your agent to change it, or edit it in Nominal.
 
 Jama Connect® is a registered trademark of Jama Software, Inc.

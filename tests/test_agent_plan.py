@@ -107,6 +107,7 @@ def test_proposed_channels_are_listed_and_later_matched_to_the_data() -> None:
     assert "except its channel as step 6 says" in markdown
     # thresholds stay as stated, with or-equal comparisons rather than shifted values
     assert "`greaterThanEqual` or `lessThanEqual`" in markdown
+    assert "its conditions are `lessThan` 10 or `greaterThan` 20" in markdown  # a range keeps both ends allowed
     # a delay between two signals is a state with time persistence, not a channel someone has to compute
     assert "set the check's time persistence (`timePersistence`) to T" in markdown
     assert "This works only while X stays set until Y happens" in markdown

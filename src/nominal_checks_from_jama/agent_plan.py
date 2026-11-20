@@ -139,7 +139,8 @@ def _match(number: int) -> str:
 _EXACT = (
     "Use each threshold as stated. When the value itself should make the condition hold, use `greaterThanEqual` "
     "or `lessThanEqual` rather than shifting the threshold. For example, a requirement to stay below 450 fails "
-    "at 450 too, so its condition is `greaterThanEqual` 450."
+    "at 450 too, so its condition is `greaterThanEqual` 450. A requirement to stay between 10 and 20 fails below "
+    "10 or above 20, so its conditions are `lessThan` 10 or `greaterThan` 20."
 )
 
 # Said in each kind's drafting step: a proposed channel someone would have to compute is a last resort. The
